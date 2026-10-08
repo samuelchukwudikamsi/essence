@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login - ESSENCE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#fff;color:#111}
+header{padding:32px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;height:84px;position:sticky;top:0;background:white}
+.logo{font-weight:900;letter-spacing:6px;font-size:30px}
+.form-box{padding:50px 8%;max-width:420px;margin:0 auto}
+.form-box h2{font-size:22px;letter-spacing:4px;margin-bottom:8px}
+.form-box p{color:#777;font-size:20px;margin-bottom:28px;line-height:1.6}
+input{width:100%;padding:15px;border:1px solid #ddd;margin-bottom:14px;font-size:14px}
+button.main{width:100%;padding:15px;background:#111;color:white;border:none;letter-spacing:2px;font-size:12px;margin-top:10px}
+.link{margin-top:20px;text-align:center;font-size:25px}
+.link a{text-decoration:underline;color:#111}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+<header>
+<div class="logo" onclick="location.href='index.html'" style="cursor:pointer">ESSENCE</div>
+<div onclick="location.href='index.html'" style="cursor:pointer;font-size:30px;letter-spacing:2px">BACK TO SHOP</div>
+</header>
+<div class="form-box">
+<h2>LOGIN</h2>
+<p>Welcome back. Login to view your saved cart and orders.</p>
+<input type="email" id="email" placeholder="Email address">
+<input type="password" id="password" placeholder="Password">
+<button class="main" onclick="login()">LOGIN</button>
+<div class="link">Don't have an account? <a href="signup.html">Create account</a></div>
+<p id="msg" style="margin-top:15px;font-size:13px;text-align:center"></p>
+</div>
+<script>
+const SUPABASE_URL = 'https://axxtwtixsptrzsywkzpj.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_bEj713a6z-uBUO6S4AeKyw_Jnzo01ya';
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+async function login(){
+ const email = document.getElementById('email').value;
+ const pass = document.getElementById('password').value;
+ if(!email || !pass) return alert('Fill email and password');
+ document.getElementById('msg').innerText = 'Logging in...';
+ const { data, error } = await supabaseClient.auth.signInWithPassword({email, password: pass});
+ if(error){ document.getElementById('msg').innerText = error.message; }
+ else { document.getElementById('msg').innerText = 'Success! Redirecting...'; localStorage.setItem('essence_user', email); setTimeout(()=>location.href='index.html',1000); }
+}
+</script>
+</body>
+</html>
