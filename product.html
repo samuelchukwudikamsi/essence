@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Product - ESSENCE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#fff;color:#111}
+header{padding:32px 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #eee;height:100px;position:sticky;top:0;background:white;z-index:10}
+.logo{font-weight:900;letter-spacing:6px;font-size:30px}
+.p-wrap{padding:20px 5%;max-width:800px;margin:0 auto}
+.p-img{width:100%;height:480px;object-fit:cover;background:#f6f6f6}
+.sizes{display:flex;gap:10px;margin:18px 0}
+.size{border:1px solid #111;padding:10px 18px;font-size:20px;letter-spacing:1.8px;cursor:pointer}
+.size.active{background:#111;color:white}
+.desc{color:#666;font-size:20px;line-height:1.7;margin:16px 0}
+button.main{width:100%;padding:16px;background:#111;color:white;border:none;letter-spacing:2px;font-size:20px;margin-top:10px}
+button.sec{width:100%;padding:16px;background:white;color:#111;border:1px solid #111;letter-spacing:2px;font-size:20px;margin-top:10px}
+</style>
+</head>
+<body>
+<header>
+<div class="logo" onclick="location.href='index.html'">ESSENCE</div>
+<div onclick="location.href='index.html'" style="font-size:18px;letter-spacing:2px;cursor:pointer">BACK</div>
+</header>
+<div class="p-wrap">
+<img id="pImg" class="p-img" src="">
+<h2 id="pName" style="margin-top:18px;font-size:20px;letter-spacing:1.8px"></h2>
+<p id="pPrice" style="margin-top:8px;font-weight:700;font-size:20px"></p>
+<p class="desc" id="pDesc"></p>
+<div style="font-size:20px;letter-spacing:2px;margin-top:22px">SELECT SIZE</div>
+<div class="sizes">
+<div class="size" onclick="selectSize(this,'S')">S</div>
+<div class="size" onclick="selectSize(this,'M')">M</div>
+<div class="size active" onclick="selectSize(this,'L')">L</div>
+<div class="size" onclick="selectSize(this,'XL')">XL</div>
+</div>
+<button class="main" onclick="addCart()">ADD TO CART - <span id="btnPrice"></span></button>
+<button class="sec" onclick="buyNow()">BUY IT NOW</button>
+<p style="margin-top:22px;font-size:18px;color:#888;line-height:1.6">Free US shipping over $75<br>Free returns within 30 days<br> Ships from New York & Lagos</p>
+</div>
+<script>
+const PRODUCTS = {
+'matching1':{name:'His & Hers Trench - Camel',price:210,img:'matching1.jpg',desc:'Premium couple matching trench set. Unisex oversized fit, water-resistant fabric. Perfect for resort & street style. Limited stock.'},
+'matching2':{name:'Couple Long Trench Set',price:240,img:'matching2.jpg',desc:'Longline couple trench coat set. Luxury wool blend, limited edition. Model is 6ft wearing L.'},
+'resort1':{name:'Resort Bikini + Wrap Set',price:85,img:'resort1.jpg',desc:'3-piece resort set: bikini + sarong + straw hat. US sizing. Hand wash.'},
+'bottom1':{name:'Chain Flare Jeans - Black',price:78,img:'bottom1.jpg',desc:'High waist flare jeans with chain belt detail. Stretch denim, fits true to size.'},
+'bottom2':{name:'Pinstripe Flare Pants',price:72,img:'bottom2.jpg',desc:'Tailored pinstripe flare pants. Office to dinner. S fits 6-8, M 8-10, L 10-12.'},
+'acc1':{name:'Mini Birkin - Orange',price:95,img:'acc1.jpg',desc:'Vegan leather mini Birkin with gold clasp. Comes with dust bag. 20x15cm.'},
+'acc2':{name:'Gold Stainless Set',price:45,img:'acc2.jpg',desc:'Tarnish-free stainless steel. Necklace + bracelet + earrings + ring. Waterproof.'},
+'acc3':{name:'Silver Diamante Set',price:68,img:'acc3.jpg',desc:'Silver diamante full set. Hypoallergenic, waterproof. Perfect for owambe & resort.'},
+'top1':{name:'Essential Tee - Black',price:28,img:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500',desc:'100% cotton essential tee.'},
+'dress1':{name:'Slip Dress - Black',price:88,img:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500',desc:'Satin slip dress.'},
+outer1:{name:'Military Bomber Jacket - Green',price:120,img:'outer1.jpg',desc:'Premium bomber with patch badges and shearling collar.'},
+outer2:{name:'Belted Leather Jacket - Black',price:135,img:'outer2.jpg',desc:'Oversized faux leather jacket with belt.'},
+jeans1:{name:'High-Waist Wide Leg Jeans',price:65,img:'jeans1.jpg',desc:'High-waist wide leg blue jeans.'},
+jeans2:{name:'Baggy Light Wash Jeans - Unisex',price:70,img:'jeans2.jpg',desc:'Baggy unisex light wash jeans.'}
+};
+let selectedSize='L';
+let currentProd=null;
+function selectSize(el,s){document.querySelectorAll('.size').forEach(x=>x.classList.remove('active'));el.classList.add('active');selectedSize=s;}
+const id=new URLSearchParams(window.location.search).get('id')||'matching1';
+currentProd=PRODUCTS[id];
+if(currentProd){document.getElementById('pImg').src=currentProd.img;document.getElementById('pName').innerText=currentProd.name;document.getElementById('pPrice').innerText=`$${currentProd.price}.00`;document.getElementById('btnPrice').innerText=`$${currentProd.price}.00`;document.getElementById('pDesc').innerText=currentProd.desc;}
+function addCart(){let c=JSON.parse(localStorage.getItem('essence_cart')||'[]');c.push({name:`${currentProd.name} (${selectedSize})`,price:currentProd.price});localStorage.setItem('essence_cart',JSON.stringify(c));alert(`Added ${currentProd.name} Size ${selectedSize} to cart`);location.href='index.html';}
+function buyNow(){addCart();}
+</script>
+</body>
+</html>
