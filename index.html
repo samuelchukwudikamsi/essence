@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ESSENCE</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#fff;color:#111}
+header{padding:32px 5%;display:flex;justify-content:space-between;align-items:center;background:white;position:sticky;top:0;z-index:50;border-bottom:1px solid #eee;height:130px}
+.logo{font-weight:900;letter-spacing:6px;font-size:30px}
+#userBox{font-size:17px;letter-spacing:1px;max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.products{padding:20px 3%;display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
+.card{cursor:pointer}
+.card img{width:100%;height:450px;object-fit:cover;background:#f6f6f6}
+.card h4{font-size:17px;margin:8px 0 2px;font-weight:400;height:38px;overflow:hidden}
+.card p{font-size:17px;font-weight:600}
+.add-btn{width:100%;margin-top:8px;padding:11px;background:#111;color:white;border:none;font-size:18px;letter-spacing:1.2px}
+#sideMenu{position:fixed;top:0;right:-100%;width:90%;max-width:360px;height:100vh;background:white;z-index:200;padding:28px 22px;transition:0.32s;overflow-y:auto}
+#sideMenu.active{right:0}
+#overlay{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,0.45);z-index:199}
+#overlay.active{display:block}
+.menu-links{display:flex;flex-direction:column;gap:18px;margin-top:10px}
+.menu-links a{font-size:20px;letter-spacing:1.6px;text-transform:uppercase;text-decoration:none;color:#111;cursor:pointer;padding:8px 0;border-bottom:1px solid #f2f2f2}
+.cat-title{padding:32px 6% 14px;font-size:20px;letter-spacing:4px;font-weight:700}
+.category-grid{padding:0 4%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.cat-card{position:relative;height:280px;overflow:hidden;background:#f5f5f5;cursor:pointer}
+.cat-card img{width:100%;height:100%;object-fit:cover;object-position:top}
+.cat-card span{position:absolute;bottom:0;left:0;width:100%;padding:14px 10px;background:linear-gradient(transparent,rgba(0,0,0,0.75));color:white;font-size:20px;letter-spacing:1.7px;text-transform:uppercase}
+footer{background:#111;color:#aaa;padding:45px 6% 25px;margin-top:40px}
+.footer-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:30px;margin-bottom:30px}
+.footer-grid h4{color:white;font-size:15px;letter-spacing:1.3px;margin-bottom:12px}
+.footer-grid a{display:block;color:#888;font-size:15px;margin-bottom:10px;text-decoration:none;cursor:pointer}
+.footer-bottom{border-top:1px solid #222;padding-top:20px;text-align:center;font-size:15px;color:#666;line-height:1.3}
+#popup{position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(0,0,0,0.6);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+#popup.active{display:flex}
+.popup-box{background:white;padding:28px;max-width:420px;width:100%;max-height:80vh;overflow-y:auto}
+.popup-box h3{letter-spacing:3px;font-size:20px;margin-bottom:12px}
+.popup-box p{font-size:20px;line-height:1.7;color:#555}
+.close-popup{margin-top:18px;padding:12px;background:#111;color:white;border:none;width:100%;letter-spacing:1.6px;font-size:20px}
+.ximage{width:30px;}
+</style>
+</head>
+<body>
+<header>
+<div class="logo" onclick="location.href='index.html'">ESSENCE</div>
+<div style="display:flex;gap:14px;align-items:center">
+<div id="userBox"></div>
+<div onclick="openCart()" style="display:flex;align-items:center;gap:6px;cursor:pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg><span id="cartCount">0</span></div>
+<div onclick="openMenu()" style="cursor:pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></div>
+</div>
+</header>
+
+<div id="overlay" onclick="closeMenu();closeCart();closePopup()"></div>
+
+<div id="sideMenu">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:28px"><b style="letter-spacing:4px;font-size:30px">MENU</b><span onclick="closeMenu()" style="font-size:30px;cursor:pointer;font-weight:300"><img src="x.jpg" class="ximage"></span></div>
+<div class="menu-links">
+<a onclick="filterCat('all');closeMenu()">Shop All</a>
+<a onclick="filterCat('tops');closeMenu()">Tops</a>
+<a onclick="filterCat('bottoms');closeMenu()">Bottoms</a>
+<a onclick="filterCat('dresses');closeMenu()">Dresses</a>
+<a onclick="filterCat('sets');closeMenu()">Matching Sets</a>
+<a onclick="filterCat('jeans');closeMenu()">Jeans</a>
+<a onclick="filterCat('outerwear');closeMenu()">Outerwear</a>
+<a onclick="filterCat('resort');closeMenu()">Resort Wear</a>
+<a onclick="filterCat('accessories');closeMenu()">Accessories</a>
+</div>
+<div id="authLinks" style="margin-top:28px;border-top:1px solid #eee;padding-top:18px"></div>
+</div>
+
+<div style="position:relative;width:100%;height:92vh;min-height:620px;background:linear-gradient(rgba(0,0,0,0.1),rgba(0,0,0,0.25)), url('https://images.unsplash.com/photo-1483985988355-763728e1935b?w=1200') center top/cover no-repeat;display:flex;align-items:center;justify-content:center"><h1 style="color:white;font-size:42px;letter-spacing:8px;text-align:center;font-weight:300;text-shadow:0 2px 20px rgba(0,0,0,0.5)">ESSENCE<br>CLOTHING</h1></div>
+
+<div class="cat-title">SHOP BY CATEGORY</div>
+<div class="category-grid">
+<div class="cat-card" onclick="filterCat('sets')"><img src="matching1.jpg"><span>Matching Sets</span></div>
+<div class="cat-card" onclick="filterCat('resort')"><img src="resort1.jpg"><span>Resort Wear</span></div>
+<div class="cat-card" onclick="filterCat('bottoms')"><img src="bottom1.jpg"><span>Bottoms</span></div>
+<div class="cat-card" onclick="filterCat('accessories')"><img src="acc1.jpg"><span>Accessories</span></div>
+</div>
+
+<div id="shop" class="cat-title">SHOP ALL</div>
+<div class="products" id="productGrid"></div>
+
+<div id="cartDrawer" style="position:fixed;top:0;right:-100%;width:85%;max-width:320px;height:100vh;background:white;z-index:201;padding:22px;transition:0.32s"><h3 style="display:flex;justify-content:space-between">Cart <span onclick="closeCart()" style="cursor:pointer"><img src="x.jpg" class="ximage"></span></h3><div id="cartItems" style="margin-top:20px"></div><p id="cartTotal" style="margin-top:15px;font-weight:bold"></p><button onclick="checkout()" style="width:100%;padding:12px;background:#111;color:white;border:none;margin-top:15px;letter-spacing:1px">CHECKOUT WHATSAPP</button></div>
+
+<footer>
+<div class="footer-grid">
+<div><h4>CUSTOMER CARE</h4><a onclick="openPopup('shipping')">Shipping</a><a onclick="openPopup('returns')">Returns</a><a onclick="openPopup('contact')">Contact</a></div>
+<div><h4>LEGAL</h4><a onclick="openPopup('privacy')">Privacy Policy</a><a onclick="openPopup('terms')">Terms</a><a onclick="openPopup('cookies')">Cookie Policy</a></div>
+<div><h4>ABOUT</h4><a onclick="openPopup('story')">Our Story</a><a onclick="openPopup('store')">Store Locator</a></div>
+<div><h4>CONNECT</h4><a onclick="window.open('https://instagram.com/mrluckyman2009','_blank')">Instagram</a><a onclick="window.open('https://tiktok.com/@samuelchukwudikamsi','_blank')">TikTok</a><a onclick="window.open('https://wa.me/2347077447858','_blank')">WhatsApp - 10% Off</a></div>
+</div>
+<div class="footer-bottom"><p>© 2026 ESSENCE CLOTHING LLC. All Rights Reserved.<br>123 Fashion Ave, NY 10001 | support@essenceclothing.com | +234 707 744 7858</p></div>
+</footer>
+
+<div id="popup" onclick="closePopup()">
+<div class="popup-box" onclick="event.stopPropagation()">
+<h3 id="popupTitle"></h3>
+<p id="popupText"></p>
+<button class="close-popup" onclick="closePopup()">CLOSE</button>
+</div>
+</div>
+
+<script>
+const PRODUCTS = [
+{id:'matching1',name:'His & Hers Trench - Camel',price:210,cat:'sets',img:'matching1.jpg',desc:'Premium couple matching trench set.'},
+{id:'matching2',name:'Couple Long Trench Set',price:240,cat:'sets',img:'matching2.jpg',desc:'Longline couple trench set.'},
+{id:'resort1',name:'Resort Bikini + Wrap Set',price:85,cat:'resort',img:'resort1.jpg',desc:'3-piece resort set.'},
+{id:'bottom1',name:'Chain Flare Jeans - Black',price:78,cat:'bottoms',img:'bottom1.jpg',desc:'High waist flare jeans.'},
+{id:'bottom2',name:'Pinstripe Flare Pants',price:72,cat:'bottoms',img:'bottom2.jpg',desc:'Tailored flare pants.'},
+{id:'acc1',name:'Mini Birkin - Orange',price:95,cat:'accessories',img:'acc1.jpg',desc:'Vegan leather mini Birkin.'},
+{id:'acc2',name:'Gold Stainless Set',price:45,cat:'accessories',img:'acc2.jpg',desc:'Gold stainless set.'},
+{id:'acc3',name:'Silver Diamante Set',price:68,cat:'accessories',img:'acc3.jpg',desc:'Silver set.'},
+{id:'top1',name:'Essential Tee - Black',price:28,cat:'tops',img:'https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=500',desc:'Cotton tee.'},
+{id:'dress1',name:'Slip Dress - Black',price:88,cat:'dresses',img:'https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=500',desc:'Satin slip dress.'},
+{id:'outer1',name:'Military Bomber Jacket - Green',price:120,cat:'outerwear',img:'outer1.jpg',desc:'Premium bomber with patch badges and shearling collar.'},
+{id:'outer2',name:'Belted Leather Jacket - Black',price:135,cat:'outerwear',img:'outer2.jpg',desc:'Oversized faux leather jacket with belt.'},
+{id:'jeans1',name:'High-Waist Wide Leg Jeans',price:65,cat:'jeans',img:'jeans1.jpg',desc:'High-waist wide leg blue jeans.'},
+{id:'jeans2',name:'Baggy Light Wash Jeans - Unisex',price:70,cat:'jeans',img:'jeans2.jpg',desc:'Baggy unisex light wash jeans.'},
+];
+
+const POPUPS = {
+shipping:{title:'SHIPPING',text:'We ship worldwide. Lagos: 24-48hrs delivery. Outside Lagos: 2-4 days. US & UK: 5-7 days via DHL. Free shipping over $75. Tracking number sent to your WhatsApp after dispatch. Chat us on 07077447858.'},
+returns:{title:'RETURNS',text:'We accept returns within 7 days if item is unworn with tags. No return on accessories & resort wear (hygiene). To return, WhatsApp us on 07077447858 with order video. Refund in 24hrs.'},
+contact:{title:'CONTACT US',text:'WhatsApp: 07077447858\nEmail: support@essenceclothing.com\nStore: Port Harcourt, Rivers State.\nOpen Mon-Sat 9am-7pm. We reply in under 5 mins on WhatsApp.'},
+story:{title:'OUR STORY',text:'ESSENCE started in Port Harcourt with one goal: bring US premium style to Nigerian queens at fair price. From matching couple sets to resort wear and that orange Birkin everyone loves — we curate only pieces that make you stand out. We are not just selling clothes, we are selling confidence.'},
+privacy:{title:'PRIVACY POLICY',text:'Your email and password are secured with Supabase encryption. We never share your data. We only use your email to save your cart and send order updates via WhatsApp.'},
+terms:{title:'TERMS & CONDITIONS',text:'By using ESSENCE you agree: All prices in USD, payment via transfer or Paystack soon. Orders confirmed only after payment. Prices can change without notice.'},
+cookies:{title:'COOKIE POLICY',text:'We use cookies to keep you logged in and remember your cart. No third-party tracking. You can clear cookies anytime in your browser.'},
+store:{title:'STORE LOCATOR',text:'Online Store for now! Visit us on Instagram @essenceclothing_ng or WhatsApp 07077447858 for video call shopping. Physical store coming soon in GRA, Port Harcourt.'}
+};
+
+function openPopup(key){document.getElementById('popupTitle').innerText=POPUPS[key].title;document.getElementById('popupText').innerText=POPUPS[key].text;document.getElementById('popup').classList.add('active')}
+function closePopup(){document.getElementById('popup').classList.remove('active')}
+
+function renderProducts(filter='all'){
+ const grid=document.getElementById('productGrid');grid.innerHTML='';
+ PRODUCTS.filter(p=>filter==='all'||p.cat===filter).forEach(p=>{
+  grid.innerHTML+=`<div class="card" onclick="location.href='product.html?id=${p.id}'"><img src="${p.img}"><h4>${p.name}</h4><p>$${p.price}.00</p><button class="add-btn" onclick="event.stopPropagation();addToCart('${p.name}',${p.price})">ADD TO CART</button></div>`;
+ });
+}
+let cart=JSON.parse(localStorage.getItem('essence_cart')||'[]');
+function addToCart(n,p){cart.push({name:n,price:p});localStorage.setItem('essence_cart',JSON.stringify(cart));updateCart();if(navigator.vibrate)navigator.vibrate(50)}
+function updateCart(){document.getElementById('cartCount').innerText=cart.length;let d=document.getElementById('cartItems');if(!d)return; d.innerHTML='';let t=0;cart.forEach((it,i)=>{t+=it.price;d.innerHTML+=`<div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px"><span>${it.name}</span><span>$${it.price} <span onclick="cart.splice(${i},1);localStorage.setItem('essence_cart',JSON.stringify(cart));updateCart()" style="color:red;cursor:pointer"> x</span></span></div>`});document.getElementById('cartTotal').innerText=cart.length?`Total $${t}`:'Empty'}
+function openMenu(){document.getElementById('sideMenu').classList.add('active');document.getElementById('overlay').classList.add('active')}
+function closeMenu(){document.getElementById('sideMenu').classList.remove('active');document.getElementById('overlay').classList.remove('active')}
+function openCart(){document.getElementById('cartDrawer').style.right='0';document.getElementById('overlay').classList.add('active');updateCart()}
+function closeCart(){document.getElementById('cartDrawer').style.right='-100%';document.getElementById('overlay').classList.remove('active')}
+function checkout(){if(!cart.length)return alert('Empty');let m='Hello ESSENCE, I want to order:%0A';cart.forEach(i=>m+=`- ${i.name} $${i.price}%0A`);window.open(`https://wa.me/2347077447858?text=${m}`,'_blank')}
+function filterCat(cat){document.getElementById('shop').innerText=cat==='all'?'SHOP ALL':cat.toUpperCase();renderProducts(cat);document.getElementById('shop').scrollIntoView({behavior:'smooth'})}
+function checkUser(){
+ const email=localStorage.getItem('essence_user');
+ const box=document.getElementById('userBox');
+ const auth=document.getElementById('authLinks');
+ if(email){box.innerHTML=`Hi, ${email.split('@')[0]}`; auth.innerHTML=`<div style="font-size:12px;margin-bottom:10px">${email}</div><a onclick="localStorage.removeItem('essence_user');location.reload()" style="color:red;cursor:pointer;font-size:12px">Logout</a>`}
+ else{box.innerHTML=`<a href="login.html" style="text-decoration:underline;font-size:12px;letter-spacing:1px">LOGIN</a>`; auth.innerHTML=`<a href="login.html" style="display:block;margin-bottom:12px;font-size:13px">Login</a><a href="signup.html" style="display:block;font-size:13px">Create Account</a>`}
+}
+checkUser();renderProducts();updateCart();
+</script>
+</body>
+</html>
